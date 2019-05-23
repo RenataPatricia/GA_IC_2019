@@ -139,9 +139,16 @@ while(k < P):
 
 	probabilidade_cruzamento = random.random()
 
+	print(probabilidade_cruzamento)
+
 	p1 = copy.deepcopy(random.choice(populacao))
 	p2 = copy.deepcopy(random.choice(populacao))
 	
+
+	print("|||| Pais ||||")
+	print(p1)
+	print(p2)
+	print("|||| ------ ||||")
 
 	if(probabilidade_cruzamento <= taxa_cruzamento):
 		filho1[0] = copy.deepcopy(crossover(p1[0], p2[0], ponto_de_corte))
@@ -196,41 +203,32 @@ while(k < P):
 		filho1[1] = score(importancia_total, P, filho1[0], risco)
 		filho2[1] = score(importancia_total, P, filho2[0], risco)
 
-		#print(filho1)
-		#print(filho2)
+		print("|||| Filhos ||||")
+		print(filho1)
+		print(filho2)
+		print("|||| ------ ||||")
 
-		descendentes[d_cont] = copy.deepcopy(filho1)
-		d_cont +=1
-		descendentes[d_cont] = copy.deepcopy(filho2)
-		d_cont+=1
-
-		k+=2
+		if(k == P-1):
+			descendentes[k] = copy.deepcopy(filho1)
+			k += 1			
+		else:
+			descendentes[k] = copy.deepcopy(filho1)
+			k += 1
+			descendentes[k] = copy.deepcopy(filho2)
+			k += 1
 
 	else:
-		descendentes[d_cont] = copy.deepcopy(p1)
-		d_cont +=1
-		descendentes[d_cont] = copy.deepcopy(p2)
-		d_cont += 1
+		if(k == P-1):
+			descendentes[k] = copy.deepcopy(p1)
+			k += 1
+		else:
+			descendentes[k] = copy.deepcopy(p1)
+			k+=1
+			descendentes[k] = copy.deepcopy(p2)
+			k+=1
 
-		k += 2
-
-
-i = 0
-j = 0
-
-for k in range(0, P):
-	ranking[k] = populacao[i]
-	i+=1
-for l in range(P, P*2):
-	ranking[l] = descendentes[j]
-	j+=1
-
-
-
-ranking = copy.deepcopy(sorted(ranking, key = lambda x: x[1], reverse = True)) #Ordenado pelo fitness/score de forma decrescente
-print("ranking")
-for i in range (0, P*2):
-	print(ranking[i])
+for i in range(0, P):
+	print(descendentes[i])
 
 
 
