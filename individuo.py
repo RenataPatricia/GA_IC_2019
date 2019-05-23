@@ -132,6 +132,7 @@ descendentes = [0] * P
 p1 = [0] * 10
 p2 = [0] * 10
 ponto_de_corte = random.randint(0, 9)
+ranking = [0] * (P*2)
 
 
 while(k < P):
@@ -140,9 +141,7 @@ while(k < P):
 
 	p1 = copy.deepcopy(random.choice(populacao))
 	p2 = copy.deepcopy(random.choice(populacao))
-	#p1 = copy.deepcopy(p1[0]);
-	#p2 = copy.deepcopy(p2[0]);
-
+	
 
 	if(probabilidade_cruzamento <= taxa_cruzamento):
 		filho1[0] = copy.deepcopy(crossover(p1[0], p2[0], ponto_de_corte))
@@ -216,18 +215,26 @@ while(k < P):
 		k += 2
 
 
+i = 0
+j = 0
+
+for k in range(0, P):
+	ranking[k] = populacao[i]
+	i+=1
+for l in range(P, P*2):
+	ranking[l] = descendentes[j]
+	j+=1
+
+
+
+ranking = copy.deepcopy(sorted(ranking, key = lambda x: x[1], reverse = True)) #Ordenado pelo fitness/score de forma decrescente
+print("ranking")
+for i in range (0, P*2):
+	print(ranking[i])
 
 
 
 
 
 
-
-
-
-
-#populacao = copy.deepcopy(sorted(populacao, key = lambda x: x[1], reverse = True)) #Ordenado pelo fitness/score de forma decrescente
-#print("Populacao")
-#for i in range (0, P):
-#	print(populacao[i])
 
