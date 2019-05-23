@@ -128,7 +128,7 @@ d_cont = 0
 taxa_cruzamento = 0.75
 filho1 = [[0], 0]
 filho2 = [[0], 0]
-descendentes = [[0], 0] * P
+descendentes = [0] * P
 p1 = [0] * 10
 p2 = [0] * 10
 ponto_de_corte = random.randint(0, 9)
@@ -140,14 +140,13 @@ while(k < P):
 
 	p1 = copy.deepcopy(random.choice(populacao))
 	p2 = copy.deepcopy(random.choice(populacao))
-	p1 = copy.deepcopy(p1[0]);
-	p2 = copy.deepcopy(p2[0]);
+	#p1 = copy.deepcopy(p1[0]);
+	#p2 = copy.deepcopy(p2[0]);
 
 
 	if(probabilidade_cruzamento <= taxa_cruzamento):
-		filho1[0] = crossover(p1, p2, ponto_de_corte)
-		filho2[0] = crossover(p2, p1, ponto_de_corte)
-
+		filho1[0] = copy.deepcopy(crossover(p1[0], p2[0], ponto_de_corte))
+		filho2[0] = copy.deepcopy(crossover(p2[0], p1[0], ponto_de_corte))
 
 
 		#Reparo no Filho 1#
@@ -156,19 +155,19 @@ while(k < P):
 				if(custo_release1 + custo[i] <= 125):
 					custo_release1 += custo[i]
 				else:
-					filho1[0][i] = 0
+					filho1[0][i] = copy.deepcopy(0)
 
 			elif(filho1[0][i] == 2):
 				if(custo_release2 + custo[i] <= 125):
 					custo_release2 += custo[i]
 				else:
-					filho1[0][i] = 0
+					filho1[0][i] = copy.deepcopy(0)
 
 			elif(filho1[0][i] == 3):
 				if(custo_release3 + custo[i] <= 125):
 					custo_release3 += custo[i]
 				else:
-					filho1[0][i] = 0
+					filho1[0][i] = copy.deepcopy(0)
 
 
 		custo_release1 = 0
@@ -181,34 +180,40 @@ while(k < P):
 				if(custo_release1 + custo[i] <= 125):
 					custo_release1 += custo[i]
 				else:
-					filho2[0][i] = 0
+					filho2[0][i] = copy.deepcopy(0)
 
 			elif(filho2[0][i] == 2):
 				if(custo_release2 + custo[i] <= 125):
 					custo_release2 += custo[i]
 				else:
-					filho2[0][i] = 0
+					filho2[0][i] = copy.deepcopy(0)
 
 			elif(filho2[0][i] == 3):
 				if(custo_release3 + custo[i] <= 125):
 					custo_release3 += custo[i]
 				else:
-					filho2[0][i] = 0
+					filho2[0][i] = copy.deepcopy(0)
 
-	filho1[1] = score(importancia_total, P, filho1[0], risco)
-	filho2[1] = score(importancia_total, P, filho2[0], risco)
+		filho1[1] = score(importancia_total, P, filho1[0], risco)
+		filho2[1] = score(importancia_total, P, filho2[0], risco)
 
-	k +=1
+		#print(filho1)
+		#print(filho2)
 
+		descendentes[d_cont] = copy.deepcopy(filho1)
+		d_cont +=1
+		descendentes[d_cont] = copy.deepcopy(filho2)
+		d_cont+=1
 
+		k+=2
 
+	else:
+		descendentes[d_cont] = copy.deepcopy(p1)
+		d_cont +=1
+		descendentes[d_cont] = copy.deepcopy(p2)
+		d_cont += 1
 
-print(filho1)
-print(filho2)
-
-
-
-
+		k += 2
 
 
 
