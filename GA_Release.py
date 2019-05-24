@@ -240,21 +240,19 @@ while (G != 0):
 
 	for i in range (0, P):
 		for j in range(0, 10):
-			probabilidade_mutacao = random.uniform(0.00, 0.06)
+			probabilidade_mutacao = random.uniform(0.00, 0.1)
+			print(probabilidade_mutacao)
 			release = random.randint(0, 3)
 
 
 			if(probabilidade_mutacao <= taxa_mutacao):
 				if(release == 1):
-					#a
 					if(custo_descendentes[i][0] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(1)
 				elif(release == 2):
-					#b
 					if(custo_descendentes[i][1] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(2)
 				elif(release == 3):
-					#c
 					if(custo_descendentes[i][2] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(3)
 				else:
