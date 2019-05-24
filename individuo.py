@@ -36,6 +36,19 @@ def crossover(cromo1, cromo2, ponto_de_corte):
 	return filho
 
 
+def custo_cromo(cromossomo, custo):
+	C = [0] * 3
+
+	for i in range(0, 10):
+		if (cromossomo[i] == 1):
+			C[0] += custo[i]
+		elif(cromossomo[i] == 2):
+			C[1] += custo[i]
+		elif(cromossomo[i] == 3):
+			C[2] += custo[i]
+
+	return C
+
 # Variaveis a serem utilizadas #
 P = int(input("Informe uma quantidade de individuos: "))
 G = int(input("Informe a quantidade de geracoes: "))
@@ -119,9 +132,7 @@ while (cont_populacao < P):
 	cromossomo = [0] * 10
 
 
-G -= 1
-
-# Selecao + Cruzamento #
+# Selecao + Cruzamento + Reparo#
 
 k = 0
 d_cont = 0
@@ -132,23 +143,14 @@ descendentes = [0] * P
 p1 = [0] * 10
 p2 = [0] * 10
 ponto_de_corte = random.randint(0, 9)
-ranking = [0] * (P*2)
-
 
 while(k < P):
 
 	probabilidade_cruzamento = random.random()
 
-	print(probabilidade_cruzamento)
-
 	p1 = copy.deepcopy(random.choice(populacao))
 	p2 = copy.deepcopy(random.choice(populacao))
 	
-
-	print("|||| Pais ||||")
-	print(p1)
-	print(p2)
-	print("|||| ------ ||||")
 
 	if(probabilidade_cruzamento <= taxa_cruzamento):
 		filho1[0] = copy.deepcopy(crossover(p1[0], p2[0], ponto_de_corte))
@@ -203,11 +205,6 @@ while(k < P):
 		filho1[1] = score(importancia_total, P, filho1[0], risco)
 		filho2[1] = score(importancia_total, P, filho2[0], risco)
 
-		print("|||| Filhos ||||")
-		print(filho1)
-		print(filho2)
-		print("|||| ------ ||||")
-
 		if(k == P-1):
 			descendentes[k] = copy.deepcopy(filho1)
 			k += 1			
@@ -227,12 +224,56 @@ while(k < P):
 			descendentes[k] = copy.deepcopy(p2)
 			k+=1
 
+
+# Mutacao #
+
+custo_descendentes = [0] * P
+taxa_mutacao = 0.02
+
 for i in range(0, P):
-	print(descendentes[i])
+	custo_descendentes[i] = custo_cromo(descendentes[i][0], custo)
 
 
+for i in range (0, P):
+	for j in range(0, 10):
+		probabilidade_mutacao = random.uniform(0.00, 0.06)
+		release = random.randint(0, 3)
 
 
+		if(probabilidade_mutacao <= taxa_mutacao):
+			if(release == 1):
+				#a
+				if(custo_descendentes[i][0] + custo[j] <= 125):
+					descendentes[i][0][j] = copy.deepcopy(1)
+			elif(release == 2):
+				#b
+				if(custo_descendentes[i][1] + custo[j] <= 125):
+					descendentes[i][0][j] = copy.deepcopy(2)
+			elif(release == 3):
+				#c
+				if(custo_descendentes[i][2] + custo[j] <= 125):
+					descendentes[i][0][j] = copy.deepcopy(3)
+			else:
+				descendentes[i][0][j] = copy.deepcopy(0)
 
 
+for i in range(0, P):
+	descendentes[i][1] = score(importancia_total, P, descendentes[i][0], risco)
 
+
+#Ranking#
+
+ranking = [0] * (P * 2)
+k = 0
+
+for i in range(0, P):
+	ranking[i] = populacao[i]
+for j in range(P, P*2):
+	ranking[j] = descendentes[k]
+	k += 1
+
+
+ranking = sorted(ranking, key = lambda x: x[1], reverse = True)
+
+for i in range (0, P*2):
+	print(ranking[i])
