@@ -49,6 +49,17 @@ def custo_cromo(cromossomo, custo):
 
 	return C
 
+def desvio_padrao(xi, media, P):
+	dp = 0
+	numerador = 0
+
+	for i in range(0, P):
+		numerador += ((xi[i][1] - media) ** 2)
+
+	dp = ((numerador/P) ** (1/2))
+
+	return dp  
+
 # Variaveis a serem utilizadas #
 P = int(input("Informe uma quantidade de individuos: "))
 G = int(input("Informe a quantidade de geracoes: "))
@@ -61,6 +72,8 @@ custo_release2 = 0
 custo_release3 = 0
 cont_populacao = 0
 cont_geracao = 0
+media = 0
+desvio = 0
 
 
 for i in range(0, 3):
@@ -206,8 +219,8 @@ while (G != 0):
 					else:
 						filho2[0][i] = copy.deepcopy(0)
 
-			filho1[1] = score(importancia_total, P, filho1[0], risco)
-			filho2[1] = score(importancia_total, P, filho2[0], risco)
+			filho1[1] = copy.deepcopy(score(importancia_total, P, filho1[0], risco))
+			filho2[1] = copy.deepcopy(score(importancia_total, P, filho2[0], risco))
 
 			if(k == P-1):
 				descendentes[k] = copy.deepcopy(filho1)
@@ -237,7 +250,6 @@ while (G != 0):
 	for i in range(0, P):
 		custo_descendentes[i] = custo_cromo(descendentes[i][0], custo)
 
-
 	for i in range (0, P):
 		for j in range(0, 10):
 			probabilidade_mutacao = random.uniform(0.00, 0.1)
@@ -248,22 +260,30 @@ while (G != 0):
 				if(release == 1):
 					if(custo_descendentes[i][0] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(1)
+						custo_descendentes[i] = copy.deepcopy(custo_cromo(descendentes[i][0], custo))
 				elif(release == 2):
 					if(custo_descendentes[i][1] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(2)
+						custo_descendentes[i] = copy.deepcopy(custo_cromo(descendentes[i][0], custo))
 				elif(release == 3):
 					if(custo_descendentes[i][2] + custo[j] <= 125):
 						descendentes[i][0][j] = copy.deepcopy(3)
+						custo_descendentes[i] = copy.deepcopy(custo_cromo(descendentes[i][0], custo))
 				else:
 					descendentes[i][0][j] = copy.deepcopy(0)
+					custo_descendentes[i] = copy.deepcopy(custo_cromo(descendentes[i][0], custo))
 
 
 	for i in range(0, P):
-		descendentes[i][1] = score(importancia_total, P, descendentes[i][0], risco)
+		descendentes[i][1] = copy.deepcopy(0)
+	
+	for i in range(0, P):
+		descendentes[i][1] = copy.deepcopy(score(importancia_total, P, descendentes[i][0], risco))
 
 
 	#Ranking#
 
+	custo_rank = [0] * (P*2)
 	ranking = [0] * (P * 2)
 	k = 0
 
@@ -279,5 +299,24 @@ while (G != 0):
 	for i in range (0, P):
 		populacao[i] = copy.deepcopy(ranking[i])
 
+	for j in range(0, P):
+		custo_rank[j] = custo_cromo(populacao[j][0], custo)
+
+
+
+for i in range(0, P):
+	media += populacao[i][1]
+
+
+media = media/P
+desvio = desvio_padrao(populacao, media, P)
+
 
 print("O melhor individuo possui o score: ", populacao[0][1], "com o cromossomo: ", populacao[0][0])
+print("A media eh de: ", media, "e o desvio padrao eh: ", desvio)
+print("\n\n")
+
+
+print("------------------POPULACAO FINAL--------------------")
+for i in range (0, P):
+	print("     ", populacao[i])
