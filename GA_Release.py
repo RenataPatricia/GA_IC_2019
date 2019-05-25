@@ -241,7 +241,6 @@ while (G != 0):
 	for i in range (0, P):
 		for j in range(0, 10):
 			probabilidade_mutacao = random.uniform(0.00, 0.1)
-			print(probabilidade_mutacao)
 			release = random.randint(0, 3)
 
 
